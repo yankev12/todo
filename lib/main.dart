@@ -70,72 +70,150 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Widget getItems(List<Item> items) {
+    return ListView.builder(
+      itemCount: items.length,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        var item = items[index];
+        return Dismissible(
+            key: Key(item.title),
+            background: Container(
+              color: Colors.green.withOpacity(0.2),
+              padding: EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Excluir a Conquista?',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            secondaryBackground: Container(
+              color: Colors.green.withOpacity(0.2),
+              padding: EdgeInsets.only(right: 10),
+              alignment: Alignment.centerRight,
+              child: Text(
+                'Por Esparta!!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            onDismissed: (direction) {
+              removeTask(index);
+              final snackBar = SnackBar(
+                content: Text('Manda outra que essa foi fácil'),
+                action: SnackBarAction(
+                  label: 'fechar',
+                  onPressed: () {
+                    // Some code to undo the change.
+                    Scaffold.of(context).hideCurrentSnackBar();
+                  },
+                ),
+              );
+              Scaffold.of(context).showSnackBar(snackBar);
+            },
+            child: Container(
+              child: CheckboxListTile(
+                title: Text(item.title),
+                key: Key(item.title),
+                value: item.done,
+                onChanged: (value) {
+                  setState(
+                    () {
+                      item.done = value;
+                      save();
+                    },
+                  );
+                },
+              ),
+              padding: EdgeInsets.all(5),
+              width: double.infinity,
+              decoration:
+                  BoxDecoration(border: Border(bottom: BorderSide(width: 1))),
+            ));
+      },
+    );
+  }
+
+  Widget getItemsDone(List<Item> items) {
+    return ListView.builder(
+      itemCount: items.length,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        var item = items[index];
+        return Dismissible(
+            key: Key(item.title),
+            background: Container(
+              color: Colors.green.withOpacity(0.2),
+              padding: EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Excluir a Conquista?',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            secondaryBackground: Container(
+              color: Colors.green.withOpacity(0.2),
+              padding: EdgeInsets.only(right: 10),
+              alignment: Alignment.centerRight,
+              child: Text(
+                'Por Esparta!!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            onDismissed: (direction) {
+              removeTask(index);
+              final snackBar = SnackBar(
+                content: Text('Manda outra que essa foi fácil'),
+                action: SnackBarAction(
+                  label: 'fechar',
+                  onPressed: () {
+                    // Some code to undo the change.
+                    Scaffold.of(context).hideCurrentSnackBar();
+                  },
+                ),
+              );
+              Scaffold.of(context).showSnackBar(snackBar);
+            },
+            child: Container(
+              child: CheckboxListTile(
+                title: Text(item.title),
+                key: Key(item.title),
+                value: item.done,
+                onChanged: (value) {
+                  setState(
+                    () {
+                      item.done = value;
+                      save();
+                    },
+                  );
+                },
+              ),
+              padding: EdgeInsets.all(5),
+              width: double.infinity,
+              decoration:
+                  BoxDecoration(border: Border(bottom: BorderSide(width: 1))),
+            ));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Desafios aceitos"
-        ),
+        title: Text("Desafios aceitos"),
       ),
       body: Column(
         children: <Widget>[
-          Text("Lista que eu termino com os olhos fechados"),
-          ListView.builder(
-            itemCount: widget.items.length,
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              var item = widget.items[index];
-              return Dismissible(
-                key: Key(item.title),
-                background: Container(
-                  color: Colors.green.withOpacity(0.2),
-                  padding: EdgeInsets.only(left: 10),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Concluído!',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                secondaryBackground: Container(
-                  color: Colors.green.withOpacity(0.2),
-                  padding: EdgeInsets.only(right: 10),
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Finalizado!',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                onDismissed: (direction) {
-                  removeTask(index);
-                  final snackBar = SnackBar(
-                    content: Text('Manda outra que essa foi fácil'),
-                    action: SnackBarAction(
-                      label: 'fechar',
-                      onPressed: () {
-                        // Some code to undo the change.
-                        Scaffold.of(context).hideCurrentSnackBar();
-                      },
-                    ),
-                  );
-                  Scaffold.of(context).showSnackBar(snackBar);
-                },
-                child: CheckboxListTile(
-                  title: Text(item.title),
-                  key: Key(item.title),
-                  value: item.done,
-                  onChanged: (value) {
-                    setState(
-                      () {
-                        item.done = value;
-                        save();
-                      },
-                    );
-                  },
-                ),
-              );
-            },
+          Container(
+            padding: EdgeInsets.only(top: 10),
+            child: Text('Desafios que eu termino com os olhos fechados'),
           ),
-          Text('Lista que eu terminei com sucesso')
+          getItems(widget.items.where((element) => !element.done).toList()),
+          Container(
+            padding: EdgeInsets.only(top: 10),
+            child: Text('Desafios que eu terminei com sucesso'),
+          ),
+          getItemsDone(widget.items.where((element) => element.done).toList())
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -215,3 +293,17 @@ Future<String> _incrementTask(context) async {
     },
   );
 }
+
+// class ListItems extends StatefulWidget {
+//   @override
+//   _ListItems createState() => _ListItems();
+// }
+
+// class _ListItems extends State<ListItems> {
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     throw UnimplementedError();
+//   }
+
+// }
