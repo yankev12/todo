@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:first_project/models/item.dart';
+import 'package:first_project/src/models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,6 +70,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void taskDone(int index) {
+    setState(
+      () {
+        widget.items[index].done = true;
+        save();
+      },
+    );
+  }
+
   Widget getItems(List<Item> items) {
     return ListView.builder(
       itemCount: items.length,
@@ -83,7 +92,7 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(left: 10),
               alignment: Alignment.centerLeft,
               child: Text(
-                'Excluir a Conquista?',
+                'Finalizado com Sucesso',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -92,12 +101,12 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(right: 10),
               alignment: Alignment.centerRight,
               child: Text(
-                'Por Esparta!!',
+                'Easy easy',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             onDismissed: (direction) {
-              removeTask(index);
+              taskDone(index);
               final snackBar = SnackBar(
                 content: Text('Manda outra que essa foi fácil'),
                 action: SnackBarAction(
@@ -116,12 +125,7 @@ class _HomePageState extends State<HomePage> {
                 key: Key(item.title),
                 value: item.done,
                 onChanged: (value) {
-                  setState(
-                    () {
-                      item.done = value;
-                      save();
-                    },
-                  );
+                  taskDone(index);
                 },
               ),
               padding: EdgeInsets.all(5),
