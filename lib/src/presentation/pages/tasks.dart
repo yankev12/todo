@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:first_project/src/models/item.dart';
+import 'package:first_project/src/presentation/widgets/modal_add_task.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var borderRounded =
     new RoundedRectangleBorder(borderRadius: BorderRadius.circular(10));
-    
+
 class TaskPage extends StatefulWidget {
   var items = List<Item>();
 
@@ -203,64 +204,10 @@ class _TaskPageState extends State<TaskPage> {
 }
 
 Future<String> _incrementTask(context) async {
-  var newTask = TextEditingController();
   return showDialog(
     context: context,
     builder: (BuildContext bc) {
-      return SimpleDialog(
-        shape: borderRounded,
-        title: Text(
-          "O que nós vamos fazer?",
-          style: TextStyle(fontSize: 15, color: Colors.black.withOpacity(0.7)),
-          textAlign: TextAlign.left,
-        ),
-        contentPadding: EdgeInsets.all(10),
-        children: <Widget>[
-          TextFormField(
-            keyboardType: TextInputType.text,
-            controller: newTask,
-            decoration: new InputDecoration(
-              labelText: 'título',
-              fillColor: Colors.white,
-              border: new OutlineInputBorder(
-                borderRadius: new BorderRadius.circular(15.0),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                RaisedButton(
-                  child: Text('Cancelar'),
-                  textColor: Colors.white,
-                  color: Colors.blue[400],
-                  shape: borderRounded,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 15),
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.pop(context, newTask.text);
-                    },
-                    textColor: Colors.blue[400],
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: BorderSide(color: Colors.blue[400], width: 3)),
-                    child: Text('OK',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
+      return ModalAddTask();
     },
   );
 }
